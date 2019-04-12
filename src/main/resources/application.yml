@@ -1,1 +1,7 @@
 test.property: hello
+
+test:
+  url:
+    client1.url: http://localhost:8080
+    client2.url: http://localhost:8090
+    client3.url: http://localhost:8100
