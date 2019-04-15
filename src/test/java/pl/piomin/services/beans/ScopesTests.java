@@ -6,7 +6,6 @@ import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import io.micronaut.test.annotation.MicronautTest;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -29,7 +28,7 @@ public class ScopesTests {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 20; i++) {
             executor.execute(() -> {
-                String correlationId = "abc" + r.nextInt(100);
+                String correlationId = "abc" + r.nextInt(10000);
                 begin.start(correlationId);
                 Assertions.assertEquals(correlationId, finish.finish());
             });
@@ -99,9 +98,11 @@ public class ScopesTests {
 
     @Test
     public void testClient() {
-        ClientService[] clients = new ClientService[] {client, client2, client3};
-        for (int i = 0; i < 10; i++) {
-            clients[i%3].connect();
-        }
+        String url = client.connect();
+        Assertions.assertEquals("http://loalhost:8080", url);
+        url = client2.connect();
+        Assertions.assertEquals("http://loalhost:8090", url);
+        url = client3.connect();
+        Assertions.assertEquals("http://loalhost:8100", url);
     }
 }

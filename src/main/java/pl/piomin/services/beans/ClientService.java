@@ -8,7 +8,8 @@ public class ClientService {
         this.url = url;
     }
 
-    public void connect() {
+    public String connect() {
         System.out.println("Connected: " + url);
+        return url;
     }
 }
