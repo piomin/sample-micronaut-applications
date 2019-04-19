@@ -7,12 +7,14 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.annotation.MicronautTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.piomin.services.client.PersonClient;
 import pl.piomin.services.model.Gender;
 import pl.piomin.services.model.Person;
 
 import javax.inject.Inject;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 @MicronautTest
 public class PersonControllerTests {
@@ -59,6 +61,15 @@ public class PersonControllerTests {
         HttpClient client = HttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
         Person[] persons = client.toBlocking().retrieve(HttpRequest.GET("/persons"), Person[].class);
         Assertions.assertEquals(1, persons.length);
+    }
+
+    @Inject
+    PersonClient client;
+
+    @Test
+    public void testFindAllV2() {
+        List<Person> persons = client.findAllV2(10, 0);
+        Assertions.assertEquals(1, persons.size());
     }
 
 }

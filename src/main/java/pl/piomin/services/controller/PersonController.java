@@ -1,5 +1,6 @@
 package pl.piomin.services.controller;
 
+import io.micronaut.core.version.annotation.Version;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -36,8 +37,18 @@ public class PersonController {
                 .findFirst();
     }
 
+    @Version("1")
     @Get("{?max,offset}")
     public List<Person> findAll(@Nullable Integer max, @Nullable Integer offset) {
+        return persons.stream()
+                .skip(offset == null ? 0 : offset)
+                .limit(max == null ? 10000 : max)
+                .collect(Collectors.toList());
+    }
+
+    @Version("2")
+    @Get("?max,offset")
+    public List<Person> findAllV2(@NotNull Integer max, @NotNull Integer offset) {
         return persons.stream()
                 .skip(offset == null ? 0 : offset)
                 .limit(max == null ? 10000 : max)

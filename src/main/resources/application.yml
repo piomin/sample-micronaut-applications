@@ -1,6 +1,10 @@
 micronaut:
   server:
     port: 8100
+  router:
+    versioning:
+      enabled: true
+      default-version: 1
 
 test.property: hello
 
