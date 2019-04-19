@@ -1,11 +1,18 @@
 package pl.piomin.services.model;
 
+import javax.validation.constraints.*;
+
 public class Person {
 
+    @Max(10000)
     private Integer id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @PositiveOrZero
     private int age;
+    @NotNull
     private Gender gender;
 
     public Integer getId() {
