@@ -61,6 +61,10 @@
 		</dependency>
 		<dependency>
 			<groupId>io.micronaut</groupId>
+			<artifactId>micronaut-management</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micronaut</groupId>
 			<artifactId>micronaut-http-client</artifactId>
 			<scope>test</scope>
 		</dependency>
