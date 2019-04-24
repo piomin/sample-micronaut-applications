@@ -1,17 +1,18 @@
-package pl.piomin.services.controller;
+package pl.piomin.services.secure;
 
 import io.micronaut.core.version.annotation.Version;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.validation.Validated;
 import pl.piomin.services.model.Person;
 
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -19,10 +20,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Controller("/persons")
-@Secured(SecurityRule.IS_ANONYMOUS)
-@Validated
-public class PersonController {
+@Controller("/secure/persons")
+@Secured(SecurityRule.IS_AUTHENTICATED)
+public class SecurePersonController {
 
     List<Person> persons = new ArrayList<>();
 

@@ -11,6 +11,8 @@ micronaut:
       swagger:
         paths: classpath:META-INF/swagger
         mapping: /swagger/**
+  security:
+    enabled: true
 
 endpoints:
   all:
@@ -26,3 +28,10 @@ test:
     client1.url: http://localhost:8080
     client2.url: http://localhost:8090
     client3.url: http://localhost:8100
+
+credentials:
+  users:
+    smith: smith123
+    scott: scott123
+    piomin: piomin123
+    test: test123
