@@ -13,6 +13,19 @@ micronaut:
         mapping: /swagger/**
   security:
     enabled: true
+    endpoints:
+      login:
+        enabled: true
+      oauth:
+        enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+              jws-algorithm: HS256
 
 endpoints:
   all:

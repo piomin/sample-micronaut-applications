@@ -12,6 +12,8 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.annotation.MicronautTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.piomin.services.beans.UserCredentials;
+import pl.piomin.services.beans.UserToken;
 import pl.piomin.services.model.Gender;
 import pl.piomin.services.model.Person;
 
@@ -53,6 +55,15 @@ public class SecurePersonControllerTests {
 		HttpClient client = HttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
 		Person person = client.toBlocking()
 				.retrieve(HttpRequest.GET("/secure/persons/1").basicAuth("scott", "scott123"), Person.class);
+		Assertions.assertNotNull(person);
+	}
+
+	@Test
+	public void testFindByIdUsingJWTToken() throws MalformedURLException {
+		HttpClient client = HttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
+		UserToken token = client.toBlocking().retrieve(HttpRequest.POST("/login", new UserCredentials("scott", "scott123")), UserToken.class);
+		Person person = client.toBlocking()
+				.retrieve(HttpRequest.GET("/secure/persons/1").bearerAuth(token.getAccessToken()), Person.class);
 		Assertions.assertNotNull(person);
 	}
 }
