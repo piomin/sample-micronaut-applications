@@ -19,7 +19,7 @@ public class UserPasswordAuthProvider implements AuthenticationProvider {
         String username = req.getIdentity().toString();
         String password = req.getSecret().toString();
         if (password.equals(store.getUserPassword(username))) {
-            UserDetails details = new UserDetails(username, Collections.emptyList());
+            UserDetails details = new UserDetails(username, Collections.singletonList(store.getUserRole(username)));
             return Flowable.just(details);
         } else {
             return Flowable.just(new AuthenticationFailed());

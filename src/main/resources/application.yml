@@ -35,3 +35,8 @@ credentials:
     scott: scott123
     piomin: piomin123
     test: test123
+  roles:
+    smith: ADMIN
+    scott: VIEW
+    piomin: VIEW
+    test: ADMIN
