@@ -1,0 +1,4 @@
+micronaut:
+  ssl:
+    enabled: true
+    buildSelfSigned: true
