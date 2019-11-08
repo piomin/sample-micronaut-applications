@@ -15,6 +15,17 @@ public class Person {
     @NotNull
     private Gender gender;
 
+    public Person() {
+    }
+
+    public Person(Integer id, String firstName, String lastName, int age, Gender gender) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.gender = gender;
+    }
+
     public Integer getId() {
         return id;
     }
