@@ -10,6 +10,8 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.validation.Validated;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.piomin.services.model.Gender;
 import pl.piomin.services.model.Person;
 
@@ -24,10 +26,11 @@ import java.util.concurrent.TimeUnit;
 @Validated
 public class PersonReactiveController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonReactiveController.class);
+
     List<Person> persons = new ArrayList<>();
 
-    @PostConstruct
-    public void init() {
+    public PersonReactiveController() {
         persons.add(new Person(1, "Name01", "Surname01", 11, Gender.MALE));
         persons.add(new Person(2, "Name02", "Surname02", 22, Gender.MALE));
         persons.add(new Person(3, "Name03", "Surname03", 33, Gender.MALE));
@@ -48,7 +51,9 @@ public class PersonReactiveController {
 
     @Get(produces = MediaType.APPLICATION_JSON_STREAM)
     public Flowable<Person> findAll() {
-        return Flowable.fromIterable(persons).delay(10, TimeUnit.MILLISECONDS);
+        return Flowable.fromIterable(persons)
+                .doOnNext(person -> LOGGER.info("Server: {}", person))
+                .delay(10, TimeUnit.MILLISECONDS);
     }
 
 }
