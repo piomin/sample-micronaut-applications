@@ -57,15 +57,15 @@ public class PersonReactiveController {
     	return Maybe.just(persons.stream().filter(person -> person.getId().equals(id)).findAny().get());
 	}
 
-    @Get(produces = MediaType.APPLICATION_JSON_STREAM)
-    public Flowable<Person> findAll() {
+    @Get(value = "/stream", produces = MediaType.APPLICATION_JSON_STREAM)
+    public Flowable<Person> findAllStream() {
         return Flowable.fromIterable(persons)
                 .doOnNext(person -> LOGGER.info("Server: {}", person))
                 .delay(10, TimeUnit.MILLISECONDS);
     }
 
-    @Get(value = "/callable", produces = MediaType.APPLICATION_JSON_STREAM)
-    public Flowable<Person> findAllCallable() {
+    @Get(value = "/stream/callable", produces = MediaType.APPLICATION_JSON_STREAM)
+    public Flowable<Person> findAllStreamWithCallable() {
         return Flowable.fromCallable(() -> {
             int r = new Random().nextInt(100);
             Person p = new Person(r, "Name"+r, "Surname"+r, r, Gender.MALE);

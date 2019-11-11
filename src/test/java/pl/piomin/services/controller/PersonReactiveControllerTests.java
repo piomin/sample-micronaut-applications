@@ -7,11 +7,14 @@ import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.RxStreamingHttpClient;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.annotation.MicronautTest;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import net.jodah.concurrentunit.Waiter;
@@ -61,10 +64,10 @@ public class PersonReactiveControllerTests {
     }
 
     @Test
-    public void testFindAll() throws MalformedURLException, TimeoutException, InterruptedException {
+    public void testFindAllStream() throws MalformedURLException, TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
         RxStreamingHttpClient client = RxStreamingHttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
-        client.jsonStream(HttpRequest.GET("/persons/reactive"), Person.class)
+        client.jsonStream(HttpRequest.GET("/persons/reactive/stream"), Person.class)
                 .subscribe(s -> {
                     LOGGER.info("Client: {}", s);
                     waiter.assertNotNull(s);
@@ -74,10 +77,10 @@ public class PersonReactiveControllerTests {
     }
 
     @Test
-    public void testFindAllCallable() throws MalformedURLException, TimeoutException, InterruptedException {
+    public void testFindAllStreamWithCallable() throws MalformedURLException, TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
         RxStreamingHttpClient client = RxStreamingHttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
-        client.jsonStream(HttpRequest.GET("/persons/reactive/callable"), Person.class)
+        client.jsonStream(HttpRequest.GET("/persons/reactive/stream/callable"), Person.class)
             .subscribe(new Subscriber<Person>() {
 
                 Subscription s;
