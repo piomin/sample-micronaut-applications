@@ -4,11 +4,13 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.validation.Validated;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,11 @@ public class PersonReactiveController {
         persons.add(person);
         return Single.just(person);
     }
+
+    @Get("/{id}")
+    public Maybe<Person> findById(@PathVariable Integer id) {
+    	return Maybe.just(persons.stream().filter(person -> person.getId().equals(id)).findAny().get());
+	}
 
     @Get(produces = MediaType.APPLICATION_JSON_STREAM)
     public Flowable<Person> findAll() {
