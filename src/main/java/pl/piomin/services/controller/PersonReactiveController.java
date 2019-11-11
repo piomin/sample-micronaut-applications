@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Controller("/persons/reactive")
@@ -54,6 +55,16 @@ public class PersonReactiveController {
         return Flowable.fromIterable(persons)
                 .doOnNext(person -> LOGGER.info("Server: {}", person))
                 .delay(10, TimeUnit.MILLISECONDS);
+    }
+
+    @Get(value = "/callable", produces = MediaType.APPLICATION_JSON_STREAM)
+    public Flowable<Person> findAllCallable() {
+        return Flowable.fromCallable(() -> {
+            int r = new Random().nextInt(100);
+            Person p = new Person(r, "Name"+r, "Surname"+r, r, Gender.MALE);
+            return p;
+        }).doOnNext(person -> LOGGER.info("Server: {}", person))
+                .repeat(9);
     }
 
 }

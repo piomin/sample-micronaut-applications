@@ -71,4 +71,41 @@ public class PersonReactiveControllerTests {
         waiter.await(3000, TimeUnit.MILLISECONDS, 9);
     }
 
+    @Test
+    public void testFindAllCallable() throws MalformedURLException, TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
+        RxStreamingHttpClient client = RxStreamingHttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
+        client.jsonStream(HttpRequest.GET("/persons/reactive/callable"), Person.class)
+            .subscribe(new Subscriber<Person>() {
+
+                Subscription s;
+
+                @Override
+                public void onSubscribe(Subscription subscription) {
+                    subscription.request(1);
+                    s = subscription;
+                }
+
+                @Override
+                public void onNext(Person person) {
+                    LOGGER.info("Client: {}", person);
+                    waiter.assertNotNull(person);
+                    waiter.resume();
+                    s.request(1);
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+
+                }
+            });
+        waiter.await(3000, TimeUnit.MILLISECONDS, 9);
+    }
+
 }
