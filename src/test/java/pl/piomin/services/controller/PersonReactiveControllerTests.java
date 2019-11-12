@@ -23,6 +23,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.piomin.services.client.PersonReactiveClient;
 import pl.piomin.services.model.Gender;
 import pl.piomin.services.model.Person;
 
@@ -77,6 +78,19 @@ public class PersonReactiveControllerTests {
     }
 
     @Test
+    public void testFindAllStreamDelayed() throws MalformedURLException, TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
+        RxStreamingHttpClient client = RxStreamingHttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
+        client.jsonStream(HttpRequest.GET("/persons/reactive/stream/callable/delayed"), Person.class)
+                .subscribe(s -> {
+                    LOGGER.info("Client: {}", s);
+                    waiter.assertNotNull(s);
+                    waiter.resume();
+                });
+        waiter.await(3000, TimeUnit.MILLISECONDS, 9);
+    }
+
+    @Test
     public void testFindAllStreamWithCallable() throws MalformedURLException, TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
         RxStreamingHttpClient client = RxStreamingHttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
@@ -109,6 +123,48 @@ public class PersonReactiveControllerTests {
 
                 }
             });
+        waiter.await(3000, TimeUnit.MILLISECONDS, 9);
+    }
+
+    @Inject
+    PersonReactiveClient client;
+
+    @Test
+    public void testAddDeclarative() throws TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
+        final Person person = new Person(null, "Name100", "Surname100", 22, Gender.MALE);
+        Single<Person> s = client.add(person);
+        s.subscribe(person1 -> {
+            LOGGER.info("Retrieved: {}", person1);
+            waiter.assertNotNull(person1);
+            waiter.assertNotNull(person1.getId());
+            waiter.resume();
+        });
+        waiter.await(3000, TimeUnit.MILLISECONDS);
+    }
+
+    @Test
+    public void testFindByIdDeclarative() throws TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
+        Maybe<Person> s = client.findById(1);
+        s.subscribe(person1 -> {
+            LOGGER.info("Retrieved: {}", person1);
+            waiter.assertNotNull(person1);
+            waiter.assertEquals(1, person1.getId());
+            waiter.resume();
+        });
+        waiter.await(3000, TimeUnit.MILLISECONDS);
+    }
+
+    @Test
+    public void testFindAllStreamDeclarative() throws MalformedURLException, TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
+        Flowable<Person> persons = client.findAllStream();
+        persons.subscribe(s -> {
+            LOGGER.info("Client: {}", s);
+            waiter.assertNotNull(s);
+            waiter.resume();
+        });
         waiter.await(3000, TimeUnit.MILLISECONDS, 9);
     }
 

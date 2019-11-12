@@ -74,4 +74,14 @@ public class PersonReactiveController {
                 .repeat(9);
     }
 
+    @Get(value = "/stream/callable/delayed", produces = MediaType.APPLICATION_JSON_STREAM)
+    public Flowable<Person> findAllStreamWithCallableDelayed() {
+        return Flowable.fromCallable(() -> {
+            int r = new Random().nextInt(100);
+            Person p = new Person(r, "Name"+r, "Surname"+r, r, Gender.MALE);
+            return p;
+        }).doOnNext(person -> LOGGER.info("Server: {}", person))
+                .repeat(9).delay(100, TimeUnit.MILLISECONDS);
+    }
+
 }
