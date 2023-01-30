@@ -10,6 +10,9 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<sonar.projectKey>piomin_sample-micronaut-applications</sonar.projectKey>
+		<sonar.organization>piomin</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<exec.mainClass>pl.piomin.services.sample.SampleApp</exec.mainClass>
@@ -232,6 +235,25 @@
 									</path>
 								</annotationProcessorPaths>
 							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.8</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report</id>
+							<phase>test</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
 						</execution>
 					</executions>
 				</plugin>
