@@ -11,7 +11,7 @@ import java.util.List;
 public interface PersonClient {
 
     @Version("2")
-    @Get("?max,offset")
+    @Get("{?max,offset}")
     List<Person> findAllV2(Integer max, Integer offset);
 
 }
