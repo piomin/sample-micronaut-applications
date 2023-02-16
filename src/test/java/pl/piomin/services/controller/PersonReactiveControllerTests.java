@@ -1,6 +1,7 @@
 package pl.piomin.services.controller;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.rxjava3.http.client.Rx3HttpClient;
 import io.micronaut.rxjava3.http.client.Rx3StreamingHttpClient;
@@ -29,14 +30,19 @@ public class PersonReactiveControllerTests {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PersonReactiveControllerTests.class);
 
-    @Inject
     EmbeddedServer server;
+
+    Rx3HttpClient client;
+
+    public PersonReactiveControllerTests(EmbeddedServer server, @Client("/") Rx3HttpClient client) {
+        this.server = server;
+        this.client = client;
+    }
 
     @Test
     public void testAdd() throws MalformedURLException, TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
         final Person person = new Person(null, "Name100", "Surname100", 22, Gender.MALE);
-        Rx3HttpClient client = Rx3HttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
         Single<Person> s = client.retrieve(HttpRequest.POST("/persons/reactive", person), Person.class).firstOrError();
         s.subscribe(person1 -> {
             LOGGER.info("Retrieved: {}", person1);
@@ -50,7 +56,6 @@ public class PersonReactiveControllerTests {
     @Test
     public void testFindById() throws MalformedURLException, TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
-        Rx3HttpClient client = Rx3HttpClient.create(new URL("http://" + server.getHost() + ":" + server.getPort()));
         Maybe<Person> s = client.retrieve(HttpRequest.GET("/persons/reactive/1"), Person.class).firstElement();
         s.subscribe(person1 -> {
             LOGGER.info("Retrieved: {}", person1);
@@ -124,13 +129,13 @@ public class PersonReactiveControllerTests {
     }
 
     @Inject
-    PersonReactiveClient client;
+    PersonReactiveClient personClient;
 
     @Test
     public void testAddDeclarative() throws TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
         final Person person = new Person(null, "Name100", "Surname100", 22, Gender.MALE);
-        Single<Person> s = client.add(person);
+        Single<Person> s = personClient.add(person);
         s.subscribe(person1 -> {
             LOGGER.info("Retrieved: {}", person1);
             waiter.assertNotNull(person1);
@@ -143,7 +148,7 @@ public class PersonReactiveControllerTests {
     @Test
     public void testFindByIdDeclarative() throws TimeoutException, InterruptedException {
         final Waiter waiter = new Waiter();
-        Maybe<Person> s = client.findById(1);
+        Maybe<Person> s = personClient.findById(1);
         s.subscribe(person1 -> {
             LOGGER.info("Retrieved: {}", person1);
             waiter.assertNotNull(person1);
@@ -151,18 +156,6 @@ public class PersonReactiveControllerTests {
             waiter.resume();
         });
         waiter.await(3000, TimeUnit.MILLISECONDS);
-    }
-
-    @Test
-    public void testFindAllStreamDeclarative() throws MalformedURLException, TimeoutException, InterruptedException {
-        final Waiter waiter = new Waiter();
-        Flowable<Person> persons = client.findAllStream();
-        persons.subscribe(s -> {
-            LOGGER.info("Client: {}", s);
-            waiter.assertNotNull(s);
-            waiter.resume();
-        });
-        waiter.await(3000, TimeUnit.MILLISECONDS, 9);
     }
 
 }

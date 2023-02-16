@@ -2,6 +2,7 @@ package pl.piomin.services.controller;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -17,12 +18,16 @@ import java.net.URL;
 @MicronautTest(propertySources = "classpath:ssl.yml")
 public class SecureSSLPersonControllerTests {
 
-	@Inject
 	EmbeddedServer server;
+	HttpClient client;
+
+	public SecureSSLPersonControllerTests(EmbeddedServer server, @Client("/") HttpClient client) {
+		this.server = server;
+		this.client = client;
+	}
 
 	@Test
 	public void testAdd() throws MalformedURLException {
-		HttpClient client = HttpClient.create(new URL(server.getScheme() + "://" + server.getHost() + ":" + server.getPort()));
 		Person person = new Person();
 		person.setFirstName("John");
 		person.setLastName("Smith");
@@ -36,7 +41,6 @@ public class SecureSSLPersonControllerTests {
 
 	@Test
 	public void testAddFailed() throws MalformedURLException {
-		HttpClient client = HttpClient.create(new URL(server.getScheme() + "://" + server.getHost() + ":" + server.getPort()));
 		Person person = new Person();
 		person.setFirstName("John");
 		person.setLastName("Smith");
@@ -49,7 +53,6 @@ public class SecureSSLPersonControllerTests {
 
 	@Test
 	public void testFindById() throws MalformedURLException {
-		HttpClient client = HttpClient.create(new URL(server.getScheme() + "://" + server.getHost() + ":" + server.getPort()));
 		Person person = client.toBlocking()
 				.retrieve(HttpRequest.GET("/secure/persons/1").basicAuth("scott", "scott123"), Person.class);
 		Assertions.assertNotNull(person);

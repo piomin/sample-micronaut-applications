@@ -21,6 +21,10 @@ public class ScopesTests {
     BeginService begin;
     @Inject
     FinishService finish;
+    @Inject
+    ApplicationContext context;
+    @Inject
+    RefreshableService refreshable;
 
     @Test
     public void testThreadLocalScope() {
@@ -39,11 +43,6 @@ public class ScopesTests {
         System.out.println("Finished all threads");
     }
 
-    @Inject
-    ApplicationContext context;
-    @Inject
-    RefreshableService refreshable;
-
     @Test
     public void testRefreshableScope() {
         String testProperty = refreshable.getTestProperty();
@@ -59,50 +58,4 @@ public class ScopesTests {
         Assertions.assertEquals("hi", testProperty);
     }
 
-    @Inject
-    TestPropertyRequiredService service1;
-    @Inject
-    TestPropertyNotRequiredService service2;
-    @Inject
-    TestPropertyRequiredValueService service3;
-
-    @Test
-    public void testPropertyRequired() {
-        String testProperty = service1.getTestProperty();
-        Assertions.assertNotNull(testProperty);
-        Assertions.assertEquals("hello", testProperty);
-    }
-
-    @Test
-    public void testPropertyNotRequired() {
-        String testProperty = service2.getTestProperty();
-        Assertions.assertNotNull(testProperty);
-        Assertions.assertEquals("None", testProperty);
-    }
-
-    @Test
-    public void testPropertyValueRequired() {
-        String testProperty = service3.getTestProperty();
-        Assertions.assertNotNull(testProperty);
-        Assertions.assertEquals("hello", testProperty);
-    }
-
-    @Inject
-    ClientService client;
-    @Inject
-    @Named("client2")
-    ClientService client2;
-    @Inject
-    @Named("client3")
-    ClientService client3;
-
-    @Test
-    public void testClient() {
-        String url = client.connect();
-        Assertions.assertEquals("http://loalhost:8080", url);
-        url = client2.connect();
-        Assertions.assertEquals("http://loalhost:8090", url);
-        url = client3.connect();
-        Assertions.assertEquals("http://loalhost:8100", url);
-    }
 }

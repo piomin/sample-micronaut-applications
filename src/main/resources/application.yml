@@ -7,6 +7,14 @@ micronaut:
     versioning:
       enabled: true
       default-version: 1
+      parameter:
+        enabled: false
+        names: 'v,api-version'
+      header:
+        enabled: true
+        names:
+          - 'X-API-VERSION'
+          - 'Accept-Version'
     static-resources:
       swagger:
         paths: classpath:META-INF/swagger

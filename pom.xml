@@ -76,8 +76,28 @@
 			<artifactId>micronaut-management</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>1.70</version>
+		</dependency>
+		<dependency>
 			<groupId>io.micronaut</groupId>
 			<artifactId>micronaut-http-client</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -204,59 +224,55 @@
 <!--					</dependency>-->
 <!--				</dependencies>-->
 <!--			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<arg>-Amicronaut.processing.group=pl.piomin.services</arg>
+						<arg>-Amicronaut.processing.module=sample-micronaut-applications</arg>
+					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>io.micronaut</groupId>
+							<artifactId>micronaut-inject-java</artifactId>
+							<version>${micronaut.version}</version>
+						</path>
+						<path>
+							<groupId>io.micronaut.openapi</groupId>
+							<artifactId>micronaut-openapi</artifactId>
+							<version>${micronaut.openapi.version}</version>
+						</path>
+						<path>
+							<groupId>io.micronaut.security</groupId>
+							<artifactId>micronaut-security</artifactId>
+							<version>${micronaut.security.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-						<compilerArgs>
-							<arg>-Amicronaut.processing.group=pl.piomin.services</arg>
-							<arg>-Amicronaut.processing.module=sample-micronaut-applications</arg>
-						</compilerArgs>
-						<annotationProcessorPaths>
-							<path>
-								<groupId>io.micronaut</groupId>
-								<artifactId>micronaut-inject-java</artifactId>
-								<version>${micronaut.version}</version>
-							</path>
-							<path>
-								<groupId>io.micronaut.openapi</groupId>
-								<artifactId>micronaut-openapi</artifactId>
-								<version>${micronaut.openapi.version}</version>
-							</path>
-							<path>
-								<groupId>io.micronaut.security</groupId>
-								<artifactId>micronaut-security</artifactId>
-								<version>${micronaut.security.version}</version>
-							</path>
-						</annotationProcessorPaths>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>report</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<dependencyManagement>
