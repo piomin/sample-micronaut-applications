@@ -22,7 +22,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<exec.mainClass>pl.piomin.services.sample.SampleApp</exec.mainClass>
-		<micronaut.version>3.8.8</micronaut.version>
+		<micronaut.version>3.8.9</micronaut.version>
 	</properties>
 
 	<dependencies>
