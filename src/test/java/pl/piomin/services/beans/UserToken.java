@@ -1,7 +1,9 @@
 package pl.piomin.services.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.serde.annotation.Serdeable;
 
+@Serdeable
 public class UserToken {
 
     private String username;
