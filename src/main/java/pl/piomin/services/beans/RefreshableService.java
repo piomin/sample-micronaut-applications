@@ -3,7 +3,7 @@ package pl.piomin.services.beans;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.runtime.context.scope.Refreshable;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Refreshable
 public class RefreshableService {
