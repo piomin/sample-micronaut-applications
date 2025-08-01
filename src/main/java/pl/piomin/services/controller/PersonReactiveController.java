@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import pl.piomin.services.model.Gender;
 import pl.piomin.services.model.Person;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

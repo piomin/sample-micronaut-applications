@@ -1,7 +1,9 @@
 package pl.piomin.services.model;
 
-import javax.validation.constraints.*;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.*;
 
+@Serdeable
 public class Person {
 
     @Max(10000)
